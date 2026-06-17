@@ -1,406 +1,60 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Azka Salman Portfolio</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
-    html{scroll-behavior:smooth}
-    body{
-      background:radial-gradient(circle at top right,rgba(37,99,235,.30),transparent 30%),
-      radial-gradient(circle at bottom left,rgba(14,165,233,.20),transparent 35%),#07111f;
-      min-height:100vh;overflow-y:auto;overflow-x:hidden;color:white;
-    }
-    .container{max-width:1200px;margin:auto;padding:40px 20px}
-    .card{
-      background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
-      backdrop-filter:blur(15px);border-radius:32px;padding:50px;
-      box-shadow:0 20px 60px rgba(0,0,0,.45);
-    }
-    .hero{display:grid;grid-template-columns:320px 1fr;gap:50px;align-items:center}
-    .profile-wrapper{display:flex;justify-content:center}
-    .profile{
-      width:280px;height:280px;border-radius:50%;padding:6px;
-      background:linear-gradient(135deg,#2563eb,#38bdf8);
-      box-shadow:0 0 35px rgba(37,99,235,.55);
-    }
-    .profile img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
-    .badge{
-      display:inline-block;padding:8px 18px;border-radius:50px;
-      background:rgba(59,130,246,.12);border:1px solid rgba(96,165,250,.25);
-      color:#60a5fa;font-size:14px;font-weight:600;margin-bottom:18px;
-    }
-    .hero-text h1{font-size:54px;line-height:1.1;margin-bottom:12px}
-    .hero-text h2{color:#60a5fa;font-size:24px;margin-bottom:22px}
-    .hero-text p{color:#cbd5e1;line-height:1.9;font-size:16px;max-width:700px}
-    .section-title{margin:60px 0 25px;text-align:center;font-size:30px}
-    .section-title span{color:#60a5fa}
-    .info-grid,.contact-grid{display:grid;gap:20px}
-    .info-grid{grid-template-columns:repeat(4,1fr)}
-    .contact-grid{grid-template-columns:repeat(3,1fr)}
-    .info-box,.contact-card,.contact-form,.admin-box{
-      background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
-      border-radius:22px;padding:24px;transition:.3s;
-    }
-    .info-box:hover,.contact-card:hover{transform:translateY(-5px);background:rgba(255,255,255,.07)}
-    .icon,.contact-icon{
-      width:55px;height:55px;border-radius:16px;background:rgba(37,99,235,.18);
-      display:flex;justify-content:center;align-items:center;font-size:24px;margin-bottom:18px;
-    }
-    .info-box h3{color:#60a5fa;font-size:15px;margin-bottom:8px}
-    .info-box p,.contact-card p{color:#cbd5e1;font-size:14px}
-    .contact-card{text-decoration:none;color:white;display:flex;justify-content:space-between;align-items:center}
-    .contact-left{display:flex;align-items:center;gap:16px}
-    .contact-icon{margin-bottom:0;font-size:26px}
-    .contact-form{display:flex;flex-direction:column;gap:18px}
-    .contact-form input,.contact-form textarea,.admin-box input{
-      width:100%;padding:18px;border:none;outline:none;border-radius:18px;
-      background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
-      color:white;font-size:15px;margin-bottom:14px;
-    }
-    .contact-form textarea{resize:none}
-    .contact-form input::placeholder,.contact-form textarea::placeholder,.admin-box input::placeholder{color:#94a3b8}
-    .contact-form button, footer button, .admin-box button{
-      padding:16px;border:none;border-radius:18px;background:#2563eb;
-      color:white;font-size:16px;font-weight:600;cursor:pointer;transition:.3s;
-    }
-    .contact-form button:hover, footer button:hover, .admin-box button:hover{background:#1d4ed8;transform:translateY(-3px)}
-    .logout-btn{background:#dc2626!important;margin-bottom:20px}
-    .message-card{
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:16px;
-      padding:18px;
-      margin-top:15px;
-      color:#dbeafe;
-    }
-    .message-card h3{color:#93c5fd;margin-bottom:8px}
-    .message-card p{line-height:1.6;margin-bottom:8px}
-    .message-card small{color:#94a3b8}
-    footer{margin-top:50px;padding-top:25px;border-top:1px solid rgba(255,255,255,.08);text-align:center;color:#94a3b8;font-size:14px}
-    .reveal{opacity:0;transform:translateY(50px);transition:all 1s ease}
-    .reveal.active{opacity:1;transform:translateY(0)}
-    .music-toggle{
-      position:fixed;right:25px;bottom:25px;width:65px;height:65px;border-radius:50%;
-      background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
-      backdrop-filter:blur(10px);display:flex;justify-content:center;align-items:center;
-      cursor:pointer;z-index:999;font-size:28px;
-    }
-    #adminLoginBox,#adminPanel{display:none;margin-top:35px}
-    @media(max-width:980px){
-      .hero{grid-template-columns:1fr;text-align:center}
-      .hero-text p{margin:auto}
-      .info-grid{grid-template-columns:repeat(2,1fr)}
-      .contact-grid{grid-template-columns:1fr}
-    }
-    @media(max-width:650px){
-      .card{padding:30px}
-      .profile{width:220px;height:220px}
-      .hero-text h1{font-size:36px}
-      .hero-text h2{font-size:20px}
-      .info-grid{grid-template-columns:1fr}
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hitung Harga Per Item</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
-
 <body>
+  <main class="app">
+    <h1>Hitung Harga Per Item</h1>
+    <p>Upload foto struk/menu, edit data jika perlu, lalu hitung harga setelah total.</p>
 
-  <audio id="bgMusic" autoplay loop>
-    <source src="music.mp3" type="audio/mp3">
-  </audio>
+    <section class="card">
+      <input type="file" id="imageInput" accept="image/*" />
+      <img id="preview" alt="Preview Foto" />
 
-  <div class="music-toggle" id="musicBtn">🔊</div>
-
-  <div class="container">
-    <div class="card">
-
-      <div class="hero reveal">
-        <div class="profile-wrapper">
-          <div class="profile">
-            <img src="image.jpeg" alt="Foto Profil Azka">
-          </div>
-        </div>
-
-        <div class="hero-text">
-          <span class="badge">Personal Portfolio</span>
-          <h1>Azka Salman Al Ghifari</h1>
-          <h2>Mahasiswa Teknik Informatika</h2>
-          <p>
-            Saya adalah mahasiswa Teknik Informatika di Universitas Ngudi Waluyo
-            yang memiliki minat pada bidang pengembangan web, teknologi, dan desain digital.
-          </p>
-        </div>
+      <div class="buttons">
+        <button onclick="readImage()">Baca Foto</button>
+        <button onclick="addRow()">Tambah Item</button>
+        <button onclick="loadSample()">Contoh Data</button>
+        <button onclick="calculate()">Hitung</button>
+        <button onclick="copyResult()">Salin Hasil</button>
+        <button class="danger" onclick="resetAll()">Reset</button>
       </div>
 
-      <h2 class="section-title reveal">Informasi <span>Profil</span></h2>
+      <p id="status"></p>
+    </section>
 
-      <div class="info-grid">
-        <div class="info-box reveal"><div class="icon">🎓</div><h3>Program Studi</h3><p>Teknik Informatika</p></div>
-        <div class="info-box reveal"><div class="icon">🆔</div><h3>NIM</h3><p>144251009</p></div>
-        <div class="info-box reveal"><div class="icon">🏫</div><h3>Universitas</h3><p>Universitas Ngudi Waluyo</p></div>
-        <div class="info-box reveal"><div class="icon">📧</div><h3>Email</h3><p>azkasalman.al@gmail.com</p></div>
-      </div>
+    <section class="card">
+      <label>Total Akhir</label>
+      <input type="number" id="finalTotal" placeholder="Contoh: 44000" />
+    </section>
 
-      <h2 class="section-title reveal">Connect <span>With Me</span></h2>
+    <section class="card table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nama Item</th>
+            <th>Jumlah</th>
+            <th>Harga Awal</th>
+            <th>Harga Setelah Total</th>
+            <th>Harga Per Item</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="itemBody"></tbody>
+      </table>
+    </section>
 
-      <div class="contact-grid">
-        <a href="https://www.instagram.com/salman_a.g/" target="_blank" class="contact-card reveal">
-          <div class="contact-left"><div class="contact-icon">📸</div><div><h3>Instagram</h3><p>@salman_a.g</p></div></div><span>↗</span>
-        </a>
+    <section class="card">
+      <h2>Hasil</h2>
+      <pre id="resultBox">Belum ada hasil.</pre>
+    </section>
+  </main>
 
-        <a href="mailto:azkasalman.al@gmail.com" class="contact-card reveal">
-          <div class="contact-left"><div class="contact-icon">✉️</div><div><h3>Email</h3><p>azkasalman.al@gmail.com</p></div></div><span>↗</span>
-        </a>
-
-        <a href="https://wa.me/6285163635806" target="_blank" class="contact-card reveal">
-          <div class="contact-left"><div class="contact-icon">📱</div><div><h3>WhatsApp</h3><p>+62 851 6363 5806</p></div></div><span>↗</span>
-        </a>
-      </div>
-
-      <h2 class="section-title reveal">Kirim <span>Pesan</span></h2>
-
-      <div class="contact-form reveal">
-        <input type="text" id="name" placeholder="Nama kamu">
-        <input type="email" id="email" placeholder="Email kamu">
-        <textarea id="message" rows="6" placeholder="Tulis pesan kamu..."></textarea>
-        <button id="sendBtn" onclick="sendMessage()">Kirim Pesan</button>
-      </div>
-
-      <div id="adminLoginBox" class="admin-box">
-        <h2>Login Admin</h2>
-        <input type="email" id="adminEmail" placeholder="Email admin">
-        <input type="password" id="adminPassword" placeholder="Password admin">
-        <button onclick="loginAdmin()">Login</button>
-      </div>
-
-      <div id="adminPanel" class="admin-box">
-        <h2>Pesan Masuk</h2>
-        <button class="logout-btn" onclick="logoutAdmin()">Logout</button>
-        <div id="messagesList">Loading...</div>
-      </div>
-
-      <footer class="reveal">
-        © 2026 Azka Salman Al Ghifari — Personal Portfolio
-        <br><br>
-        <button onclick="showAdminLogin()">Admin Login</button>
-      </footer>
-
-    </div>
-  </div>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      addDoc,
-      serverTimestamp,
-      query,
-      orderBy,
-      onSnapshot
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    import {
-      getAuth,
-      signInWithEmailAndPassword,
-      signOut,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAqD2qd2Jg2IKvXRWUTQhitBiwt_8dwgmo",
-      authDomain: "buatporto-bc8ba.firebaseapp.com",
-      projectId: "buatporto-bc8ba",
-      storageBucket: "buatporto-bc8ba.firebasestorage.app",
-      messagingSenderId: "465498359041",
-      appId: "1:465498359041:web:177aba2e73ccec0ed94700",
-      measurementId: "G-BCD6P4TQDP"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-
-    let firstLoad = true;
-    let unsubscribeMessages = null;
-
-    window.showAdminLogin = function(){
-      document.getElementById("adminLoginBox").style.display = "block";
-      document.getElementById("adminLoginBox").scrollIntoView({behavior:"smooth"});
-    };
-
-    window.loginAdmin = async function(){
-      const email = document.getElementById("adminEmail").value.trim();
-      const password = document.getElementById("adminPassword").value.trim();
-
-      if(!email || !password){
-        alert("Email dan password wajib diisi!");
-        return;
-      }
-
-      try{
-        await signInWithEmailAndPassword(auth, email, password);
-        alert("Login berhasil!");
-      }catch(error){
-        alert("Login gagal: " + error.code);
-        console.error(error);
-      }
-    };
-
-    window.logoutAdmin = async function(){
-      await signOut(auth);
-      alert("Berhasil logout!");
-    };
-
-    onAuthStateChanged(auth, (user) => {
-      if(user){
-        document.getElementById("adminLoginBox").style.display = "none";
-        document.getElementById("adminPanel").style.display = "block";
-        loadMessages();
-      }else{
-        document.getElementById("adminPanel").style.display = "none";
-        if(unsubscribeMessages){
-          unsubscribeMessages();
-          unsubscribeMessages = null;
-        }
-      }
-    });
-
-    function loadMessages(){
-      const messagesList = document.getElementById("messagesList");
-
-      if(unsubscribeMessages){
-        unsubscribeMessages();
-      }
-
-      const q = query(
-        collection(db, "messages"),
-        orderBy("createdAt", "desc")
-      );
-
-      unsubscribeMessages = onSnapshot(q, (snapshot) => {
-        if(!firstLoad){
-          snapshot.docChanges().forEach((change) => {
-            if(change.type === "added"){
-              alert("📩 Ada pesan baru masuk!");
-            }
-          });
-        }
-
-        firstLoad = false;
-        messagesList.innerHTML = "";
-
-        if(snapshot.empty){
-          messagesList.innerHTML = "<p>Belum ada pesan masuk.</p>";
-          return;
-        }
-
-        snapshot.forEach((doc) => {
-          const data = doc.data();
-
-          let tanggal = "Belum ada tanggal";
-          if(data.createdAt){
-            tanggal = data.createdAt.toDate().toLocaleString("id-ID");
-          }
-
-          messagesList.innerHTML += `
-            <div class="message-card">
-              <h3>${data.name || "-"}</h3>
-              <p><b>Email:</b> ${data.email || "-"}</p>
-              <p><b>Pesan:</b><br>${data.message || "-"}</p>
-              <small>${tanggal}</small>
-            </div>
-          `;
-        });
-      }, (error) => {
-        messagesList.innerHTML = "<p>Gagal mengambil pesan. Cek Firestore Rules.</p>";
-        console.error(error);
-      });
-    }
-
-    window.sendMessage = async function(){
-      const btn = document.getElementById("sendBtn");
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const message = document.getElementById("message").value.trim();
-
-      if(!name || !email || !message){
-        alert("Isi semua form dulu ya!");
-        return;
-      }
-
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if(!emailRegex.test(email)){
-        alert("Format email tidak valid!");
-        return;
-      }
-
-      btn.disabled = true;
-      btn.innerHTML = "Mengirim...";
-
-      try{
-        await addDoc(collection(db, "messages"), {
-          name,
-          email,
-          message,
-          createdAt: serverTimestamp()
-        });
-
-        alert("✅ Pesan berhasil dikirim ke database!");
-        document.getElementById("name").value = "";
-        document.getElementById("email").value = "";
-        document.getElementById("message").value = "";
-      }catch(error){
-        alert("❌ Gagal mengirim pesan: " + error.code);
-        console.error(error);
-      }finally{
-        btn.disabled = false;
-        btn.innerHTML = "Kirim Pesan";
-      }
-    };
-  </script>
-
-  <script>
-    const reveals = document.querySelectorAll(".reveal");
-
-    function revealOnScroll(){
-      reveals.forEach((element) => {
-        const windowHeight = window.innerHeight;
-        const revealTop = element.getBoundingClientRect().top;
-        if(revealTop < windowHeight - 100){
-          element.classList.add("active");
-        }
-      });
-    }
-
-    window.addEventListener("scroll", revealOnScroll);
-    revealOnScroll();
-
-    const music = document.getElementById("bgMusic");
-    const musicBtn = document.getElementById("musicBtn");
-    let isPlaying = true;
-
-    music.volume = 0.4;
-
-    musicBtn.addEventListener("click", () => {
-      if(isPlaying){
-        music.pause();
-        musicBtn.innerHTML = "🔇";
-      }else{
-        music.play();
-        musicBtn.innerHTML = "🔊";
-      }
-      isPlaying = !isPlaying;
-    });
-
-    window.addEventListener("click", () => {
-      music.play();
-    }, { once:true });
-  </script>
-
+  <script src="script.js"></script>
 </body>
 </html>

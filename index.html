@@ -1,60 +1,163 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hitung Harga Per Item</title>
+  <title>Split Harga Final</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
 <body>
-  <main class="app">
-    <h1>Hitung Harga Per Item</h1>
-    <p>Upload foto struk/menu, edit data jika perlu, lalu hitung harga setelah total.</p>
-
-    <section class="card">
-      <input type="file" id="imageInput" accept="image/*" />
-      <img id="preview" alt="Preview Foto" />
-
-      <div class="buttons">
-        <button onclick="readImage()">Baca Foto</button>
-        <button onclick="addRow()">Tambah Item</button>
-        <button onclick="loadSample()">Contoh Data</button>
-        <button onclick="calculate()">Hitung</button>
-        <button onclick="copyResult()">Salin Hasil</button>
-        <button class="danger" onclick="resetAll()">Reset</button>
+  <div class="app-shell">
+    <header class="hero card glass">
+      <div>
+        <p class="eyebrow">Receipt Calculator</p>
+        <h1>Penghitung Harga Final Per Item</h1>
+        <p class="subtitle">Hitung harga setelah diskon, pajak, service, voucher, cashback, atau total akhir pembayaran secara proporsional.</p>
       </div>
+      <div class="hero-actions">
+        <button class="btn ghost" id="themeToggle" type="button">🌙 Dark</button>
+        <button class="btn primary" id="calculateBtn" type="button">Hitung Otomatis</button>
+      </div>
+    </header>
 
-      <p id="status"></p>
-    </section>
+    <main class="grid-layout">
+      <section class="card section-span">
+        <div class="section-head">
+          <div>
+            <h2>1. Upload OCR Struk</h2>
+            <p>Upload foto struk/menu. OCR akan mencoba membaca item, qty, harga, diskon, pajak, service, dan total.</p>
+          </div>
+          <label class="upload-btn">
+            <input type="file" id="receiptInput" accept="image/*" />
+            Upload Struk
+          </label>
+        </div>
+        <div class="ocr-box">
+          <img id="receiptPreview" alt="Preview struk" hidden />
+          <div class="ocr-panel">
+            <div class="ocr-status" id="ocrStatus">Belum ada foto diupload.</div>
+            <textarea id="ocrText" placeholder="Hasil OCR akan muncul di sini dan bisa diedit manual..."></textarea>
+            <button class="btn soft" id="parseOcrBtn" type="button">Ambil Data dari OCR</button>
+          </div>
+        </div>
+      </section>
 
-    <section class="card">
-      <label>Total Akhir</label>
-      <input type="number" id="finalTotal" placeholder="Contoh: 44000" />
-    </section>
+      <section class="card section-span">
+        <div class="section-head">
+          <div>
+            <h2>2. Daftar Item</h2>
+            <p>Isi item, qty, harga satuan, dan pilih orang yang memesan.</p>
+          </div>
+          <button class="btn soft" id="addItemBtn" type="button">+ Tambah Item</button>
+        </div>
+        <div class="table-wrap">
+          <table class="input-table">
+            <thead>
+              <tr>
+                <th>Nama Item</th>
+                <th>Qty</th>
+                <th>Harga Satuan</th>
+                <th>Pemesan</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="itemsBody"></tbody>
+          </table>
+        </div>
+      </section>
 
-    <section class="card table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Nama Item</th>
-            <th>Jumlah</th>
-            <th>Harga Awal</th>
-            <th>Harga Setelah Total</th>
-            <th>Harga Per Item</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody id="itemBody"></tbody>
-      </table>
-    </section>
+      <section class="card">
+        <div class="section-head compact">
+          <div>
+            <h2>3. Ringkasan Transaksi</h2>
+            <p>Subtotal otomatis. Total akhir bisa diisi manual sesuai pembayaran asli.</p>
+          </div>
+        </div>
+        <div class="form-grid">
+          <label>Subtotal Otomatis<input id="subtotal" type="text" readonly value="0" /></label>
+          <label>Diskon<input id="discount" type="number" min="0" value="0" /></label>
+          <label>Pajak<input id="tax" type="number" min="0" value="0" /></label>
+          <label>Service Charge<input id="service" type="number" min="0" value="0" /></label>
+          <label>Biaya Lain<input id="otherFee" type="number" min="0" value="0" /></label>
+          <label>Voucher<input id="voucher" type="number" min="0" value="0" /></label>
+          <label>Cashback<input id="cashback" type="number" min="0" value="0" /></label>
+          <label class="total-field">Total Akhir Pembayaran<input id="finalTotal" type="number" min="0" value="57000" /></label>
+        </div>
+        <div class="formula-note">
+          <strong>Rumus:</strong> faktor = total akhir / subtotal. Semua item dikalikan faktor, dibulatkan ke atas, lalu dikoreksi agar total tepat sama.
+        </div>
+      </section>
 
-    <section class="card">
-      <h2>Hasil</h2>
-      <pre id="resultBox">Belum ada hasil.</pre>
-    </section>
-  </main>
+      <section class="card">
+        <div class="section-head compact">
+          <div>
+            <h2>4. Orang Split Bill</h2>
+            <p>Tambah nama orang, lalu pilih pada kolom pemesan setiap item.</p>
+          </div>
+          <button class="btn soft" id="addPersonBtn" type="button">+ Orang</button>
+        </div>
+        <div id="peopleList" class="people-list"></div>
+      </section>
 
+      <section class="card section-span">
+        <div class="section-head">
+          <div>
+            <h2>5. Hasil Perhitungan</h2>
+            <p>Harga final dibagi proporsional dan total dikoreksi otomatis.</p>
+          </div>
+          <div class="action-row">
+            <button class="btn ghost" id="copyBtn" type="button">Copy Hasil</button>
+            <button class="btn ghost" id="excelBtn" type="button">Export Excel</button>
+            <button class="btn ghost" id="pdfBtn" type="button">Export PDF</button>
+            <button class="btn ghost" id="printBtn" type="button">Print</button>
+            <button class="btn danger" id="resetBtn" type="button">Reset</button>
+          </div>
+        </div>
+        <div class="summary-cards">
+          <div><span>Subtotal</span><strong id="sumSubtotal">Rp0</strong></div>
+          <div><span>Total Akhir</span><strong id="sumFinal">Rp0</strong></div>
+          <div><span>Faktor</span><strong id="sumFactor">0</strong></div>
+          <div><span>Status</span><strong id="sumStatus">Belum dihitung</strong></div>
+        </div>
+        <div class="table-wrap">
+          <table class="result-table">
+            <thead>
+              <tr>
+                <th>Nama Item</th>
+                <th>Qty</th>
+                <th>Harga Awal</th>
+                <th>Harga Setelah Penyesuaian</th>
+                <th>Harga Per Item</th>
+                <th>Selisih</th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card section-span">
+        <div class="section-head">
+          <div>
+            <h2>6. Hasil Split Bill</h2>
+            <p>Total tagihan per orang berdasarkan item yang dipilih.</p>
+          </div>
+          <button class="btn primary" id="copySplitBtn" type="button">Copy Split Bill</button>
+        </div>
+        <div id="splitResults" class="split-results"></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
